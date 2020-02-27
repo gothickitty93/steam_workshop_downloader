@@ -223,9 +223,10 @@ def plugins_to_remove(plugins_id_list, old_plugins):
 
 """Removes old plugins and modifies list
 Will return:
-    - a dictionary item:
+    - two dictionary items:
         - saved_data (without the deprecated plugins)
-Return dict(deprecated_plugins)
+        - old_plugins
+Return dict(saved_data), dict(old_plugins)
 """
 def deletePlugins(deprecated_plugins, output_dir, saved_data, old_plugins):
     for plugin in deprecated_plugins:
