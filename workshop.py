@@ -227,15 +227,18 @@ Will return:
         - saved_data (without the deprecated plugins)
 Return dict(deprecated_plugins)
 """
-def deletePlugins(deprecated_plugins, output_dir, saved_data):
+def deletePlugins(deprecated_plugins, output_dir, saved_data, old_plugins):
     for plugin in deprecated_plugins:
         # remove plugins from server
         plugin_path = os.path.join(output_dir, plugin + ".vpk")
         if os.path.exists(plugin_path):
             os.remove(plugin_path)
-        # remove from the dictionary (addons.lst)
+        # remove from the dictionary (addons.lst) and old plugins
         del saved_data['plugins'][plugin]
-    return saved_data
+        if plugin in old_plugins:
+            old_plugins.pop(plugin)
+    return saved_data, old_plugins
+
 
 def print_deprecated_info(deprecated_plugin_info):
     for plugin in deprecated_plugin_info:
@@ -268,13 +271,13 @@ def main(argv):
             deprecated_plugins = plugins_to_remove(plugins_id_list, old_plugins)
             deprecated_plugins = list(set(deprecated_plugins))
             if len(deprecated_plugins) > 0:
-                print("\nSome plugins found which are no longer in workshop collection(s).")
-                print("Removing deprecated plugins:\n")
                 error, deprecated_plugin_info = get_plugins_info(deprecated_plugins)
                 if error == None:
+                    print("\nSome plugins found which are no longer in workshop collection(s).")
+                    print("Removing deprecated plugins:\n")
                     print_deprecated_info(deprecated_plugin_info)
                     # remove plugins from server and resave dictionary to reflect change
-                    saved_data = deletePlugins(deprecated_plugins, output_dir, saved_data)
+                    saved_data, old_plugins = deletePlugins(deprecated_plugins, output_dir, saved_data, old_plugins)
                     
             plugins_id_list += old_plugins.keys()
             plugins_id_list = list(set(plugins_id_list))
