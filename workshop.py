@@ -50,6 +50,7 @@ def download_plugins (output_dir, plugins, old_plugins):
     succeed = dict()
     error = 0
     downloads = 0
+    counter = 1
     for plugin in plugins:
         if 'file_url' in plugin:
             plugin_display_name = '"{title}" ({publishedfileid}.vpk)'.format(**plugin)
@@ -64,6 +65,10 @@ def download_plugins (output_dir, plugins, old_plugins):
                     for k in ('title', 'time_updated') \
                     if k in plugin)
             else:
+                # continue iterating so addons.lst gets
+                # appended with already up-to-date plugins
+                if downloads >= g_iLimitDownloads and g_iLimitDownloads != 0:
+                    continue;
                 # if plugin not up-to-date or never download
                 try:
                     name = plugin['publishedfileid'] + ".vpk"
@@ -71,13 +76,13 @@ def download_plugins (output_dir, plugins, old_plugins):
                     path = os.path.join(output_dir, name)
                     urllib.request.urlretrieve(plugin['file_url'], path)
                     print("Downloading complete")
+                    counter += 1
                     succeed[plugin['publishedfileid']] = dict((k,plugin[k]) \
                         for k in ('title', 'time_updated') \
                         if k in plugin)
                     downloads += 1
                     if downloads == g_iLimitDownloads:
                         print("Finished downloading limited map pool ({}/{} plugins downloaded)".format(downloads, downloads))
-                        break
                 except HTTPError as e:
                     # some time the request fail, too much spam ?
                     safe_print("Server return " + str(e.code) + " error on " + \
@@ -299,7 +304,7 @@ def main(argv):
     if error == None:
         num_download_failures = 0
         print("\n")
-        while len(plugins_info) > 0 and num_download_failures < 25:
+        while len(plugins_info) > 0 and num_download_failures < 5:
             error, plugins_info, succeed_temp = download_plugins(output_dir, plugins_info, old_plugins)
             saved_data['plugins'].update(succeed_temp)
             file = open(save_file, 'w')
@@ -310,7 +315,7 @@ def main(argv):
                 time.sleep(sleep)
                 num_download_failures += 1
                 print('--------------------------------------------------')
-                print('Failed downloads (attempt #{} / 25)'.format(num_download_failures))
+                print('Failed downloads (attempt #{} / 5)'.format(num_download_failures))
             else:
                 # clear the counter
                 num_download_failures = 0
