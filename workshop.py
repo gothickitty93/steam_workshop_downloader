@@ -50,7 +50,6 @@ def download_plugins (output_dir, plugins, old_plugins):
     succeed = dict()
     error = 0
     downloads = 0
-    counter = 1
     for plugin in plugins:
         if 'file_url' in plugin:
             plugin_display_name = '"{title}" ({publishedfileid}.vpk)'.format(**plugin)
@@ -76,7 +75,6 @@ def download_plugins (output_dir, plugins, old_plugins):
                     path = os.path.join(output_dir, name)
                     urllib.request.urlretrieve(plugin['file_url'], path)
                     print("Downloading complete")
-                    counter += 1
                     succeed[plugin['publishedfileid']] = dict((k,plugin[k]) \
                         for k in ('title', 'time_updated') \
                         if k in plugin)
