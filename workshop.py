@@ -8,6 +8,11 @@ from urllib.error import HTTPError, URLError
 import json
 import time
 
+# Downloading a large collection at once on a new install of L4D2 may cause errors on bootup.
+# Set this if you'd like to cap the amount of downloads at once. (Undownloaded plugins will resume
+# next time the script launches).  0 = don't limit downloads.
+g_iLimitDownloads = 0
+
 def safe_print(*objects, errors = 'ignore', **kwargs):
     '''
     I really don't want to have to bother with fixing up all my texts when printing, so here's
@@ -44,6 +49,7 @@ def download_plugins (output_dir, plugins, old_plugins):
     fail = []
     succeed = dict()
     error = 0
+    downloads = 0
     for plugin in plugins:
         if 'file_url' in plugin:
             plugin_display_name = '"{title}" ({publishedfileid}.vpk)'.format(**plugin)
@@ -68,6 +74,10 @@ def download_plugins (output_dir, plugins, old_plugins):
                     succeed[plugin['publishedfileid']] = dict((k,plugin[k]) \
                         for k in ('title', 'time_updated') \
                         if k in plugin)
+                    downloads += 1
+                    if downloads == g_iLimitDownloads:
+                        print("Finished downloading limited map pool ({}/{} plugins downloaded)".format(downloads, downloads))
+                        break
                 except HTTPError as e:
                     # some time the request fail, too much spam ?
                     safe_print("Server return " + str(e.code) + " error on " + \
