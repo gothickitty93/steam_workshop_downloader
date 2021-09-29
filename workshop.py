@@ -106,7 +106,7 @@ def get_plugins_info (plugins_id_list):
         data['publishedfileids[' + str(idx) + ']'] = plugin_id
     encode_data = urllib.parse.urlencode(data).encode('ascii')
     try:
-        response = urllib.request.urlopen(const_urls['file'], encode_data)
+        response = urllib.request.urlopen(const_urls['file'], encode_data, timeout = 10)
     except HTTPError as e:
         print("Server return " + str(e.code) + " error")
         error = e
@@ -140,7 +140,7 @@ def get_plugins_id_from_collections_list (collections_id_list):
         data['publishedfileids[' + str(idx) + ']'] = collection_id
     encode_data = urllib.parse.urlencode(data).encode('ascii')
     try:
-        response = urllib.request.urlopen(const_urls['collection'], encode_data)
+        response = urllib.request.urlopen(const_urls['collection'], encode_data, timeout = 10)
     except HTTPError as e:
         print("Server return " + str(e.code) + " error")
         error = e
