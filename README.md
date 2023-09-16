@@ -4,9 +4,12 @@
 Little script for downloading plugins from steam workshop for server that do not
 support natively the workshop like left4dead2 server.
 
-This variation of the script was optimized, modified for multi-threaded downloading,
-and provids a 10 second pause between downloads, as to not get rate-limited by steam. 
+This variation of the script was optimized and modified for multi-threaded downloading,
+as to not get rate-limited by steam. 
 Changes made by our new AI overlord ChatGPT, with prompts by me.
+
+Looking to modify the code to make the script only download one plugin at a time.
+Pull requests welcome!
 
 ## How to use
 Download the script and run it with the collection(s) id as arg. Note that it
