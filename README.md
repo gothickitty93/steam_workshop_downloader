@@ -5,7 +5,9 @@ Little script for downloading plugins from steam workshop for server that do not
 support natively the workshop like left4dead2 server.
 
 This variation of the script was optimized and modified for multi-threaded downloading,
-as to not get rate-limited by steam. 
+as to not get rate-limited by steam. Right now, it will start downloading
+all addons at the same time, which may or may not work in your situation.
+
 Changes made by our new AI overlord ChatGPT, with prompts by me.
 
 Looking to modify the code to make the script only download one plugin at a time.
