@@ -179,6 +179,21 @@ def get_plugins_info(plugins_id_list):
             plugin_info.append(plugin)
     return error, plugin_info
 
+def plugins_to_remove(plugins_id_list, old_plugins):
+    # Initialize a list to store deprecated plugins
+    deprecated_plugins = []
+
+    # Iterate through the keys (plugin IDs) in old_plugins
+    for plugin_id in old_plugins.keys():
+        # Check if the plugin ID is not in the plugins_id_list
+        if plugin_id not in plugins_id_list:
+            # If it's not in the list, it's deprecated, so add it to the deprecated_plugins list
+            deprecated_plugins.append(plugin_id)
+
+    # Return the list of deprecated plugins
+    return deprecated_plugins
+
+
 def main(argv):
     sleep = 15
     error, output_dir, collections_id_list, save_file = init(argv)
@@ -237,3 +252,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv)
+
